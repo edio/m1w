@@ -7,7 +7,7 @@ $(BINARY): ${SERVER}
 	go build ${LDFLAGS} -o ${BINARY} ${SERVER}
 
 $(SBINARY): ${SERVER}
-	CGO_ENABLED=0 go build --tags netgo -a -v -o ${SBINARY} cmd/server/main.go
+	CGO_ENABLED=0 go build --tags netgo -a -v -o ${SBINARY} ${SERVER}
 
 .PHONY: docker
 docker: ${SBINARY} Dockerfile
