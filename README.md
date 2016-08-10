@@ -30,10 +30,14 @@ Compiler and tools for Go language are required.
 
 ```
 $ make
-# bin/m1w --db /path/to/database
+# bin/m1w
 ```
 
-You need root privileges to bind to port 80.
+You need root privileges to bind to port 80. Alternatively:
+
+```
+$ bin/m1w -port 8080 -db /path/to/database
+```
 
 ## Build and run in a docker container
 
