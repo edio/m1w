@@ -1,29 +1,28 @@
-package main
+package redirect
 
 import (
-	"github.com/edio/monolith"
+	"github.com/edio/m1w/storage"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 )
 
-func AdminUi(w http.ResponseWriter, r *http.Request) {
-	key := mux.Vars(r)["key"]
-	w.Write([]byte("Under construction:" + key))
-	w.WriteHeader(http.StatusFound)
+func Init(r *mux.Router) {
+	r.Methods(http.MethodPost).PathPrefix("/{key}").HandlerFunc(AddRedirect)
+	r.Methods(http.MethodGet).PathPrefix("/{key}").HandlerFunc(GoRedirect)
 }
 
 func GoRedirect(w http.ResponseWriter, r *http.Request) {
 	key := mux.Vars(r)["key"]
-	location, err := monolith.ResolveLocation(key)
+	location, err := storage.ResolveLocation(key)
 	if err == nil {
 		w.Header().Set("Location", *location)
 		w.WriteHeader(http.StatusFound)
-	} else if err == monolith.ErrKeyNotFound {
+	} else if err == storage.ErrKeyNotFound {
 		w.WriteHeader(http.StatusNotFound)
 	} else {
-		w.Header().Set("x-go-error", err.Error())
+		w.Header().Set("x-m1w-error", err.Error())
 		w.WriteHeader(http.StatusServiceUnavailable)
 	}
 }
@@ -38,11 +37,11 @@ func AddRedirect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = monolith.Add(key, url)
+	err = storage.Add(key, url)
 	if err == nil {
 		w.WriteHeader(http.StatusCreated)
 	} else {
-		w.Header().Set("x-go-error", err.Error())
+		w.Header().Set("x-m1w-error", err.Error())
 		w.WriteHeader(http.StatusServiceUnavailable)
 	}
 }

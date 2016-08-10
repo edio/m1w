@@ -1,8 +1,8 @@
-package monolith
+package storage
 
 import (
-	"github.com/golang/glog"
 	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/golang/glog"
 	"net/url"
 )
 
